@@ -1,7 +1,4 @@
-import os
-import numpy as np
 import pandas as pd
-
 
 from reader import get_texts, concatenate_text
 from preprocessor import clean_data, preprocess
@@ -29,11 +26,11 @@ def main(ngram_range: tuple = (1,1), n_components: int = 2, max_inter: int = 100
         lda_model.components_, columns=vectorizer.get_feature_names_out()
     )
     print(f'Topic word mixture sample: \n{topic_word_mixture}')
-    print_topics(lda_model, vectorizer, 10)
+    print_topics(lda_model, vectorizer, 5)
 
 
     __import__("IPython").embed()
 
 
 if __name__ == "__main__":
-    main(ngram_range=(2,3), n_components = 4)
+    main(ngram_range=(2,2), n_components = 3)

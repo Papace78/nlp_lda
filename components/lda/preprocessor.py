@@ -5,8 +5,11 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 
-
-stop_words = set(list(stopwords.words('english')))
+custom_stop_words = [
+    "go",
+    "thank",
+]
+stop_words = set(list(stopwords.words('english')+list(custom_stop_words)))
 
 
 def clean_data(x: str) -> str:
