@@ -2,17 +2,25 @@ import pandas as pd
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
-
-all_vectorizer = TfidfVectorizer()
-
-all_vectorized = all_vectorizer.fit_transform(all_interviews)
-all_vectorized = pd.DataFrame(all_vectorized.toarray(),columns = all_vectorizer.get_feature_names_out())
+from sklearn.model_selection import GridSearchCV
 
 
-n_components = 4
-lda_model = LatentDirichletAllocation(n_components=n_components, max_iter = 100)
+def tfid_vectorizer(preproc_texts: pd.DataFrame, ngram_range: tuple = (1,1)) -> pd.DataFrame:
+    vectorizer = TfidfVectorizer(ngram_range=ngram_range)
 
-lda_model.fit(all_vectorized)
+    vectorized_texts = vectorizer.fit_transform(preproc_texts)
+    vectorized_texts = pd.DataFrame(vectorized_texts.toarray(),columns = vectorizer.get_feature_names_out())
+
+    return vectorizer, vectorized_texts
+
+
+def lda(vectorized_texts, n_components: int = 2, max_iter: int = 100):
+
+    lda_model = LatentDirichletAllocation(n_components=n_components, max_iter = max_iter)
+    lda_model.fit(vectorized_texts)
+
+    return lda_model
+
 
 def print_topics(lda_model, vectorizer, top_words):
     # 1. TOPIC MIXTURE OF WORDS FOR EACH TOPIC

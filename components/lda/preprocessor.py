@@ -2,22 +2,18 @@
 import string
 
 from nltk.corpus import stopwords
-from nltk import RegexpTokenizer
-
-import spacy
-from spacy.lang.fr.stop_words import STOP_WORDS as fr_stop
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
 
 
-nlp_fr = spacy.load("fr_core_news_md")
-tokenizer = RegexpTokenizer(r'''\w'|\w+|[^\w\s]''')
-stop_words = set(list(fr_stop)+list(stopwords.words('french')))
+stop_words = set(list(stopwords.words('english')))
 
 
 def clean_data(x: str) -> str:
+
     x = "".join([w for w in x if not w.isdigit()])
+
     for punctuation in string.punctuation:
-        if punctuation == "'":
-            continue
         x = x.replace(punctuation,'')
 
     x = x.lower()
@@ -26,11 +22,13 @@ def clean_data(x: str) -> str:
 
 def preprocess(x : str) -> str:
 
-    x = tokenizer.tokenize(x)
+    x = word_tokenize(x)
 
-    x = " ".join([w for w in x if not w in stop_words and len(w)>1])
+    lemmatized = [
+        WordNetLemmatizer().lemmatize(word, pos = "v")
+        for word in x
+    ]
 
-    tokens = nlp_fr(x)
-    x = " ".join([token.lemma_ for token in tokens])
+    x = " ".join(w for w in lemmatized if not w in stop_words)
 
     return x
