@@ -11,3 +11,6 @@ scikit-learn
 
 nltk
 spacy
+
+typer
+rich
